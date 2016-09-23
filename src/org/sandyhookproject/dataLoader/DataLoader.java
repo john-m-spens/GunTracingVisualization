@@ -4,20 +4,42 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.prefs.Preferences;
 
 import org.sandyhookproject.entity.*;
 
 public class DataLoader {
 
+
 	private Connection con;
 	
 	public DataLoader() {
-		try {
+
+		String connectionString = "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata";
+		String userName = "sandyhookdb";
+		String password = "gundbpwd";
+		
+		setPreferences();
+		/*
+		Preferences preferences = Preferences.userNodeForPackage(DataLoader.class);
+	    preferences.put("db_connection_string", connectionString);
+	    preferences.put("db_username", userName);
+	    preferences.put("db_password", password);
+		*/
+	    try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			con = DriverManager.getConnection("jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata", "sandyhookdb", "gundbpwd");
+			con = DriverManager.getConnection(connectionString, userName, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setPreferences() {
+		
+		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+	    prefs.put("db_connection_string", "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata");
+	    prefs.put("db_username", "sandyhookdb");
+	    prefs.put("db_password", "gundbpwd");
 	}
 	
 	public StatePopulations loadStatePopulations() {

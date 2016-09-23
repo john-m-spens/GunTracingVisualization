@@ -86,4 +86,11 @@ public class GunTraces {
 		return trace;
 	}
 	
+	public long count() {
+		return gunTraces.size();
+	}
+	
+	public Iterator<GunTrace> getIterator() {
+		return gunTraces.iterator();
+	}
 }

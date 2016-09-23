@@ -11,6 +11,21 @@ var scale = 1;
 
 /*******
 
+loadStatesData - Calls web service to populate the states date
+
+*/
+function loadStatesData(year) {
+	
+	var webSrvcUrl = "http://localhost:8080/SandyHookWebServices/rest/GunTracingService/getGunTraces/" + String(year);
+
+	d3.json(webSrvcUrl, function(data) {
+		gunTraceData = data;
+	});
+}
+
+
+/*******
+
     displayMap - Loads map shapes and gun data from JSON files and displays the map
 
     width, height - size (in pixels) of the displayed map.  Width is the important parameter due to the columnar layout of the display page
@@ -20,6 +35,7 @@ function displayMap(width, height) {
 
     scale = window.innerWidth / maxWidth;
     path = d3.geo.path();
+    
 
     svg = d3.select("#map-display").append("svg")
         .attr("width", width)
@@ -27,11 +43,7 @@ function displayMap(width, height) {
 
     g = svg.append("g")
         .attr("id", "states");
-
-    d3.json("http://localhost:8080/SandyHookWebServices/rest/GunTracingService/getGunTraces/2011", function(data) {
-        gunTraceData = data;
-    });
-
+  
     d3.json("json/statesMap.json", function(json) {
         g.selectAll("path")
             .data(json.features)

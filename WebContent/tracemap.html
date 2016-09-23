@@ -3,16 +3,24 @@
 <link rel="stylesheet" href="css/tracemap.css">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/tracemap.js"></script>
+
 <head>
     <meta charset="utf-8"/>
 </head>
 <body>
 <div>
 <div class=map-header>
-    <p class=title>Movement of Illegal Guns</p>
-    <p>In 2011 the ATF traced approximately 148,000 guns retrieved from criminal investigation to their state of origin.  Of those, 139,000 were identified in the Annual ATF Gun Tracing Report.  This map demonstrates where these guns were originally obtained and where they were recovered by law enforcement agencies.
-    Move your cursor over a state to see where guns that originated in a state have have been recovered.</p>
+ 
+ 	<p class=title>Movement of Illegal Guns</p>
+   <br>
+	Select the year to display<select name="traceYear" onchange="setDisplayYear(this)">
+  		<option value="2010" selected>2010</option>
+  		<option value="2011">2011</option>
+  		<option value="2012">2012</option>
+	</select>
+   </p>
 </div>
+
 <div class=map-text>
     <span id=displayStateDetails class=template>
         <p><span id=numGunsTraced class=emphasis></span> guns traced in the US originated in <span id=stateName><br></span>.</p>
@@ -43,11 +51,23 @@
 </div>
 
 <div id=map-display class=map-display>
-    <script>displayMap(675,375);</script>
+<script>
+	loadStatesData(2010);
+	displayMap(675,375);
+</script>
 </div>
 <div class=map-legend>
     <img src="images/legend.png" width=75 height=75/>
 </div>
 </div>
 </body>
+<script>
+
+function setDisplayYear(selectObj) {
+	
+	loadStatesData(selectObj.value);
+}
+
+</script>
+
 </html>
