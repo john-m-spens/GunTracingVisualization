@@ -23,6 +23,29 @@ function loadStatesData(year) {
 	});
 }
 
+function clearMapColors() {
+
+	if (g != null) {
+        g.selectAll("path")
+	        .classed("ExtraLow", function(cell) { return false; })
+	        .classed("Low", function(cell) { return false; })
+	        .classed("Medium", function(cell) { return false; })
+	        .classed("High", function(cell)  { return false; })
+	        .classed("ExtraHigh", function(cell) { return false; })
+	        .classed("Extreme", function(cell) { return false; })
+	        .classed("Selected", function(cell) { return false; });
+	}
+    document.getElementById("displayStateDetails").setAttribute("style","visibility: hidden;");
+    document.getElementById("displayStateTable").setAttribute("style","visibility: hidden;");
+    document.getElementById("stateName").innerHTML = "";
+    document.getElementById("originState").innerHTML = "";
+    document.getElementById("stateOfOrigin").innerHTML = "";
+    document.getElementById("numGunsTraced").innerHTML = "";
+    document.getElementById("pctAllTracedGuns").innerHTML = "";
+    document.getElementById("gunsPerCapita").innerHTML = "";
+}
+
+
 
 /*******
 
@@ -36,7 +59,6 @@ function displayMap(width, height) {
     scale = window.innerWidth / maxWidth;
     path = d3.geo.path();
     
-
     svg = d3.select("#map-display").append("svg")
         .attr("width", width)
         .attr("height", height);
@@ -50,6 +72,7 @@ function displayMap(width, height) {
             .enter().append("path")
             .attr("d", path)
             .on("mouseover", findStatesReceivingGuns);
+        
         resizeMap(width, height);  // Enables resizing based on screen size/resolution
     });
 }
@@ -77,6 +100,8 @@ function findStatesReceivingGuns(d) {
         createAccompanyingText(d);
     }
 }
+
+
 
 /*******
 
