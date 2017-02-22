@@ -5,9 +5,9 @@ var path;
 var svg;
 var g;
 var gunTraceData;
-var maxWidth = 1900;
-var top10List = new Array(10);
-var scale = 1;
+var gunTraceList = new Array(50);
+var currentWidth;
+var currentHeight;
 
 /*******
 
@@ -56,13 +56,21 @@ function clearMapColors() {
 */
 function displayMap(width, height) {
 
-    scale = window.innerWidth / maxWidth;
+	var x = width * 2; // / 0.7;
+    var y = height * 2;  // / 0.7;
+    var sizeString = "0 0 " + x + " " + y;
+	
     path = d3.geo.path();
     
-    svg = d3.select("#map-display").append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
+    svg = d3.select("div")
+    	.append("div")
+    	.append("svg")
+    	//responsive SVG needs these 2 attributes and no width and height attr
+    	.attr("preserveAspectRatio", "xMidYMid meet")
+    	.attr("viewBox", sizeString)
+    	.classed("svg-container", true) //container class to make it responsive
+    	.classed("svg-content-responsive", true); 
+   
     g = svg.append("g")
         .attr("id", "states");
   
@@ -73,7 +81,9 @@ function displayMap(width, height) {
             .attr("d", path)
             .on("mouseover", findStatesReceivingGuns);
         
-        resizeMap(width, height);  // Enables resizing based on screen size/resolution
+//        resizeMap(width, height);  // Enables resizing based on screen size/resolution
+    	currentWidth = width;
+    	currentHeight = height;
     });
 }
 
@@ -136,11 +146,29 @@ function findMatchingStates(tgt, src, bm, tp) {
  */
 function resizeMap(width, height) {
 
-    x = width /2 * scale;
-    y = height /2  * scale;
-    g.selectAll("path")
-    .attr("transform", "translate(" + x + "," + y + ")scale(" + scale +")translate(" + -x + "," + -y + ")");
-    }
+	var scale = calculateScaling(width, height);
+	x = width / 2;
+    y = height / 2;
+    var translateString = "translate(" + x + "," + y + ")scale(" + scale +")translate(" + -x + "," + -y + ")";
+    g.selectAll("path").attr("transform", translateString);
+}
+
+
+function calculateScaling(width, height) {
+	
+	var vScale = height/800;
+	var hScale = width/1000;
+	
+	if (vScale < hScale) {
+		return vScale;
+	}
+	else {
+		return hScale;
+	}
+	
+}
+
+
 
 /*******
 
@@ -177,70 +205,78 @@ function createAccompanyingText(d) {
         document.getElementById("displayStateTable").setAttribute("style","visibility: visible;");
         document.getElementById("stateName").innerHTML = stateName;
         document.getElementById("originState").innerHTML = stateName;
-        document.getElementById("stateOfOrigin").innerHTML = stateName;
+//        document.getElementById("stateOfOrigin").innerHTML = stateName;
         document.getElementById("numGunsTraced").innerHTML = nmbFormatter(nGuns);
         document.getElementById("pctAllTracedGuns").innerHTML = pctFormatter(nGuns, nTotGuns);
         document.getElementById("gunsPerCapita").innerHTML = nmbFormatter(nGuns/gunTraceData.states[iState].population * 100000,2);
-        createTop10Table(iState);
+        displayGunTraceList(iState);
     }
 }
 
 /*******
 
- createTop10Table() Populates the  10 recipients of guns table for the selected state.
+ createGunTraceList() Populates the  10 recipients of guns table for the selected state.
 
  nState: numeric ID of the selected state.  TODO Make this similar to the other routines where  we retrieve the state object
 
  */
-function createTop10Table(nState) {
+function displayGunTraceList(nState) {
 
-    createTop10List(nState);
+	var tableSpace = document.getElementById("displayStateTable");
+	var tableString = "<table><col width=150><col width=120><col width=120><th>State</th><th class=numeric-cell>No. of Guns</span></th><th class=numeric-cell>% Guns Recovered in this State</th>";
 
-    for (var i=0;i<10;i++) {
-        document.getElementById("state"+i).innerHTML = top10List[i][0];
-        document.getElementById("gunsTraced"+i).innerHTML = nmbFormatter(top10List[i][1]);
-        document.getElementById("totalTraced"+i).innerHTML = pctFormatter(top10List[i][1], top10List[i][2]);
+    createGunTraceList(nState);
+
+    for (var i=0;i<50;i++) {
+    	if((gunTraceList[i][1]) > 0 ) {
+	    	tableString = tableString  + "<tr><td class=text-cell>" + gunTraceList[i][0] + "</td>";
+	    	tableString = tableString  + "<td class=numeric-cell>" + nmbFormatter(gunTraceList[i][1]) + "</td>";
+	    	tableString = tableString  + "<td class=numeric-cell>" + pctFormatter(gunTraceList[i][1], gunTraceList[i][2]) + "</td></tr>";
+    	}
     }
+	tableString = tableString  + "</table>";
+	tableSpace.innerHTML = tableString;
 }
 
 /*******
 
- createTop10List() Generates the underlying list to support generation of the top 10
+ createGunTraceList() Generates the underlying list to support generation of the top 10
 
  stateNum: numeric ID of the selected state.  TODO Make this similar to the other routines where  we retrieve the state object
 
  */
-function createTop10List(stateNum) {
+function createGunTraceList(stateNum) {
 
-    clearTop10List();
+    clearGunTraceList();
 
     for (var i in gunTraceData.states[stateNum].data)   {
-        for (var j=0;j<10;j++) {
-            if (gunTraceData.states[stateNum].data[i] > top10List[j][1]) {
-                reshuffleTop10(j);
-                top10List[j] = [gunTraceData.states[i].name, gunTraceData.states[stateNum].data[i],getTotalTracesForState(i)];
-                j = 10;
+        for (var j = 0;j < 50;j++) {
+            if (gunTraceData.states[stateNum].data[i] > gunTraceList[j][1]) {
+                reshuffleGunTraceList(j);
+                gunTraceList[j] = [gunTraceData.states[i].name, gunTraceData.states[stateNum].data[i],getTotalTracesForState(i)];
+                j = 50;
             }
         }
     }
 }
 
+
 /*******
 
- reshuffleTop10() Technique to support the sorting method.
+ reshuffleGunTraceList() Technique to support the sorting method.
 
  */
-function reshuffleTop10(startingPoint) {
+function reshuffleGunTraceList(startingPoint) {
 
-    for (var i = 9; i > startingPoint;i--) {
-        top10List[i] = top10List[i-1];
+    for (var i = (50-1); i > startingPoint;i--) {
+        gunTraceList[i] = gunTraceList[i-1];
     }
 }
 
-function clearTop10List() {
+function clearGunTraceList() {
 
-    for (var i=0;i<10;i++) {
-        top10List[i] = [" ", 0, 0];
+    for (var i=0;i<50;i++) {
+        gunTraceList[i] = [" ", 0, 0];
     }
 }
 

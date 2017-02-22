@@ -1,7 +1,7 @@
 body {
     background: white;
     font-family: "Trebuchet MS", sans-serif;
-    font-size: 9.5pt;
+    font-size: 10pt;
     color: black;
 }
 
@@ -10,23 +10,52 @@ body {
 }
 
 .emphasis {
-    font-size: 11pt;
+    font-size: 10pt;
     font-weight: bold;
-    text-align: center;
 }
 
 .reduced-emphasis {
     font-size: 10pt;
-    text-align: center;
 }
 
-table,td,th {
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: right;
+}
+
+.svg-container {
+    display: inline-block;
+    position: fixed;
+    width: 80%;
+    padding-bottom: 100%; /* aspect ratio */
+    horizontal-align: right;
+    vertical-align: bottom;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+}
+
+state-table,td,th {
     table-layout: fixed;
-    border: 1px solid darkslategrey;
+    border: 0px solid darkslategrey;
     border-collapse: collapse;
 }
 
-th, td {
+th {
+    font-size: 9pt;
+    vertical-align: bottom;
+    color: white;
+    background-color: slategrey;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2}
+
+td {
     font-size: 9pt;
     vertical-align: bottom;
 }
@@ -42,32 +71,20 @@ th, td {
 }
 
 .map-header {
-    width: 100%;
-    height: 18%;
-}
-
-.map-text {
-    width: 31%;
-    height: 70%;
-    float: left;
-    margin-left: 5px;
+    width: 95%;
+    height: 10%;
 }
 
 .map-display {
-    width: 15%;
-    height: 70%;
+    width: 70%;
+    height: 80%;
     float: left;
 }
 
-.map-legend {
-    width: 11%;
-    height: 70%;
+.map-text {
+    width: 30%;
+    height: 80%;
     float: right;
-}
-
-.map-footer {
-    width: 100%;
-    height: 20%;
 }
 
 .template {

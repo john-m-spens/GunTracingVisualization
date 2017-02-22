@@ -8,59 +8,48 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<div>
 <div class=map-header>
  
- 	<p class=title>Movement of Illegal Guns</p>
+ 	<span class=title>Movement of Illegal Guns</span>
    <br>
-	Select the year to display<select name="traceYear" onchange="setDisplayYear(this)">
+   <br>
+	Select the year to display <select name="traceYear" onchange="setDisplayYear(this)">
   		<option value="2010" selected>2010</option>
   		<option value="2011">2011</option>
   		<option value="2012">2012</option>
 	</select>
-   </p>
-</div>
-
-<div class=map-text>
-    <span id=displayStateDetails class=template>
-        <p><span id=numGunsTraced class=emphasis></span> guns traced in the US originated in <span id=stateName><br></span>.</p>
-        <p>This equates to <span class=emphasis id=gunsPerCapita></span> guns traced per 100,000 residents.</p>
-        <p>And represents <span id=pctAllTracedGuns class=emphasis></span> of all guns traced in the US in 2011.</p>
-        <span id=displayStateTable class=template>
-        <br>
-        <p class=reduced-emphasis>Top Ten States Receiving Guns from <span id=originState></span></p>
-        <table>
-            <col width=150>
-            <col width=120>
-            <col width=120>
-            <th>State</th><th class=numeric-cell>Guns Traced from <span id=stateOfOrigin></span></th><th class=numeric-cell>% Guns Traced in this State</th>
-            <tr><td class=text-cell><span id=state0>--</span></td><td class=numeric-cell><span id=gunsTraced0> -- </span></td><td class=numeric-cell><span id=totalTraced0> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state1>--</span></td><td class=numeric-cell><span id=gunsTraced1> -- </span></td><td class=numeric-cell><span id=totalTraced1> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state2>--</span></td><td class=numeric-cell><span id=gunsTraced2> -- </span></td><td class=numeric-cell><span id=totalTraced2> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state3>--</span></td><td class=numeric-cell><span id=gunsTraced3> -- </span></td><td class=numeric-cell><span id=totalTraced3> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state4>--</span></td><td class=numeric-cell><span id=gunsTraced4> -- </span></td><td class=numeric-cell><span id=totalTraced4> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state5>--</span></td><td class=numeric-cell><span id=gunsTraced5> -- </span></td><td class=numeric-cell><span id=totalTraced5> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state6>--</span></td><td class=numeric-cell><span id=gunsTraced6> -- </span></td><td class=numeric-cell><span id=totalTraced6> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state7>--</span></td><td class=numeric-cell><span id=gunsTraced7> -- </span></td><td class=numeric-cell><span id=totalTraced7> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state8>--</span></td><td class=numeric-cell><span id=gunsTraced8> -- </span></td><td class=numeric-cell><span id=totalTraced8> -- </span></td></tr>
-            <tr><td class=text-cell><span id=state9>--</span></td><td class=numeric-cell><span id=gunsTraced9> -- </span></td><td class=numeric-cell><span id=totalTraced9> -- </span></td></tr>
-        </table>
-        <br>
-    </span>
-
 </div>
 
 <div id=map-display class=map-display>
 <script>
 	loadStatesData(2010);
-	displayMap(675,375);
+	var mapHeight = document.getElementById("map-display").clientHeight;
+	var mapWidth = document.getElementById("map-display").clientWidth;
+	displayMap(mapWidth,mapHeight);
 </script>
 </div>
-<div class=map-legend>
-    <img src="images/legend.png" width=75 height=75/>
+
+<div class=map-text>
+
+	<span class=table-title id=originState></span>
+	<br>
+	<br>
+    <span id=displayStateDetails class=template>
+    <span id=numGunsTraced></span> guns recovered in the US originated in <span id=stateName></span>.  This represents 
+    <span id=pctAllTracedGuns></span> of all guns recovered in the US for this year, and equates to 
+    <span id=gunsPerCapita></span> guns traced per 100,000 residents. 
+	<br><br>
+    <span class=table-title>Where these Guns were Found</span>
+    <br><br>
+    <span id=displayStateTable class=state-table>
+	</span>
+    </span>
 </div>
-</div>
+ 
+<img src="images/legend.png" width=50%/>
+
 </body>
+
 <script>
 
 function setDisplayYear(selectObj) {
@@ -72,3 +61,4 @@ function setDisplayYear(selectObj) {
 </script>
 
 </html>
+
