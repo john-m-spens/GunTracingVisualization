@@ -1,6 +1,6 @@
 body {
     background: white;
-    font-family: "Trebuchet MS", sans-serif;
+    font-family: "Helvetica", sans-serif;
     font-size: 10pt;
     color: black;
 }
@@ -27,9 +27,10 @@ body {
 .svg-container {
     display: inline-block;
     position: fixed;
-    width: 80%;
+    width: 70%;
+    height: 100%;
     padding-bottom: 100%; /* aspect ratio */
-    horizontal-align: right;
+    horizontal-align: left;
     vertical-align: bottom;
     overflow: hidden;
 }
@@ -71,20 +72,25 @@ td {
 }
 
 .map-header {
-    width: 95%;
-    height: 10%;
+    width: 100%;
+    height: 20%;
 }
 
 .map-display {
-    width: 70%;
-    height: 80%;
-    float: left;
+	float: left;
+	width: 60%;
+    height: 60%;
 }
 
 .map-text {
-    width: 30%;
-    height: 80%;
-    float: right;
+	float: right;
+    width: 40%;
+    height: 60%;
+}
+
+.map-legend {
+    width: 100%;
+    height: 20%;
 }
 
 .template {
@@ -98,28 +104,28 @@ td {
 }
 
 #states .ExtraLow {
-    fill: #ffda10;
+    fill: #ffdb04;
 }
 
 #states .Low {
-    fill: #eca549;
+    fill: #ff8f05;
 }
 
 #states .Medium {
-    fill: #d0745c;
+    fill: #fa020b;
 }
 
 #states .High {
-    fill: #ad493c;
+    fill: #f90112;
 }
 
 #states .ExtraHigh {
-    fill: #7d1f22;
+    fill: #ca002e;
 }
 
 #states .Extreme {
-    fill: #461113;
+    fill: #9c0001;
 }
 #states .Selected {
-    fill: #1f22b6;
+    fill: #313131;
 }

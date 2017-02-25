@@ -56,8 +56,8 @@ function clearMapColors() {
 */
 function displayMap(width, height) {
 
-	var x = width * 2; // / 0.7;
-    var y = height * 2;  // / 0.7;
+	var x = width * 2;
+    var y = height * 2;
     var sizeString = "0 0 " + x + " " + y;
 	
     path = d3.geo.path();
