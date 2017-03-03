@@ -56,8 +56,8 @@ function clearMapColors() {
 */
 function displayMap(width, height) {
 
-	var x = width * 2;
-    var y = height * 2;
+	var x = width *  (900/width);
+    var y = height * (800/height);
     var sizeString = "0 0 " + x + " " + y;
 	
     path = d3.geo.path();
@@ -223,7 +223,7 @@ function createAccompanyingText(d) {
 function displayGunTraceList(nState) {
 
 	var tableSpace = document.getElementById("displayStateTable");
-	var tableString = "<table><col width=150><col width=120><col width=120><th>State</th><th class=numeric-cell>No. of Guns</span></th><th class=numeric-cell>% Guns Recovered in this State</th>";
+	var tableString = "<table><col width=50%><col width=25%><col width=25%><th>State</th><th class=numeric-cell>No. of Guns</span></th><th class=numeric-cell>% Guns Recovered in this State</th>";
 
     createGunTraceList(nState);
 

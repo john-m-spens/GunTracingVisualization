@@ -78,13 +78,13 @@ td {
 
 .map-display {
 	float: left;
-	width: 60%;
+	width: 75%;
     height: 60%;
 }
 
 .map-text {
 	float: right;
-    width: 40%;
+    width: 25%;
     height: 60%;
 }
 
@@ -104,27 +104,27 @@ td {
 }
 
 #states .ExtraLow {
-    fill: #ffdb04;
+    fill: #FFF400;
 }
 
 #states .Low {
-    fill: #ff8f05;
+    fill: #FFDE2F;
 }
 
 #states .Medium {
-    fill: #fa020b;
+    fill: #FBB242;
 }
 
 #states .High {
-    fill: #f90112;
+    fill: #FF5A09;
 }
 
 #states .ExtraHigh {
-    fill: #ca002e;
+    fill: #E30002;
 }
 
 #states .Extreme {
-    fill: #9c0001;
+    fill: #BE1901;
 }
 #states .Selected {
     fill: #313131;
