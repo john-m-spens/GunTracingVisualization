@@ -24,6 +24,10 @@ public class GunTrace {
 	}
 	
 	public State getTracedTo() {
+		
+		if (tracedTo == null) {
+			tracedTo = new State();
+		} 
 		return tracedTo;
 	}
 	
@@ -31,6 +35,10 @@ public class GunTrace {
 		return traceYear;
 	}
 	public State getStateTracedFrom() {
+
+		if (tracedFrom == null) {
+			tracedFrom = new State();
+		}
 		return tracedFrom;
 	}
 	
