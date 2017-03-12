@@ -16,9 +16,9 @@ loadStatesData - Calls web service to populate the states date
 */
 function loadStatesData(year) {
 	
-	var webSrvcUrl = "http://localhost:8080/SandyHookWebServices/rest/GunTracingService/getGunTraces/" + String(year);
+	var webServiceUrl= "rest/GunTracingService/getGunTraces/" + String(year);
 
-	d3.json(webSrvcUrl, function(data) {
+	d3.json(webServiceUrl, function(data) {
 		gunTraceData = data;
 	});
 }
