@@ -28,7 +28,7 @@
         	<artifactId>heroku-maven-plugin</artifactId>
         	<version>1.1.3</version>
 			<configuration>
-  				<appName>radiant-harbor-53079</appName>
+  				<appName>tracing-illegal-guns</appName>
 			</configuration>
 		</plugin>
     </plugins>
