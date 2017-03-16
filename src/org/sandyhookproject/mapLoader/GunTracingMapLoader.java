@@ -25,19 +25,22 @@ public class GunTracingMapLoader {
 		
 		GunTracingMap gunTracingMap = new GunTracingMap();
 		
-		for (int i=0;i < stateSequence.length;i++) {
+		if (gunTraces != null)  {
 		
-			if (stateSequence[i].compareToIgnoreCase("<empty>") == 0) {
-				gunTracingMap.add(new StateTracingMap(i+1,"<empty>", 0, emptyTraceData));
-			} else {
-				State state = states.getStateByName(stateSequence[i]);
-				String stAbbrev = state.getAbbreviation();
-				StatePopulation statePop = statePops.find(stAbbrev, traceYear);
-				long population = statePop.getPopulation();
-				gunTraces.getTraces(state, traceYear);
-				long[] traceDataArray = createTraceDataArray(state,traceYear);
-				StateTracingMap stateTracingMap = new StateTracingMap(i+1,state.getName(), population, traceDataArray);
-				gunTracingMap.add(stateTracingMap);
+			for (int i=0;i < stateSequence.length;i++) {
+			
+				if (stateSequence[i].compareToIgnoreCase("<empty>") == 0) {
+					gunTracingMap.add(new StateTracingMap(i+1,"<empty>", 0, emptyTraceData));
+				} else {
+					State state = states.getStateByName(stateSequence[i]);
+					String stAbbrev = state.getAbbreviation();
+					StatePopulation statePop = statePops.find(stAbbrev, traceYear);
+					long population = statePop.getPopulation();
+					gunTraces.getTraces(state, traceYear);
+					long[] traceDataArray = createTraceDataArray(state,traceYear);
+					StateTracingMap stateTracingMap = new StateTracingMap(i+1,state.getName(), population, traceDataArray);
+					gunTracingMap.add(stateTracingMap);
+				}
 			}
 		}
 		return gunTracingMap;

@@ -18,7 +18,7 @@ public class DataLoader {
 	
 	public DataLoader() {
 
-		String configurationFile = "/org/sandyhookproject/resources/config.properties";
+		String configurationFile = "config.properties";
 		
 	    try {
 			String connectionString = getConfigurationSetting(configurationFile, "connection");
@@ -28,7 +28,8 @@ public class DataLoader {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Failed to connect to Server");
+			// e.printStackTrace();
 		}
 	}
 	
@@ -44,7 +45,9 @@ public class DataLoader {
 			}
 			rs.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println("Failed to query the state_populations table.");
+			statePops = null;
 		}
 		return statePops;
 	}
@@ -68,11 +71,14 @@ public class DataLoader {
 			}
 			rs.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println("Failed on Loading Traces.");
+			traces = null;
 		}
 		
 		return traces;
 	}
+	
 	public States loadStates() {
 		
 		States states = new States();
@@ -135,18 +141,20 @@ public class DataLoader {
 		String propertyValue = "";
 		InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
 		
-		if (configFile != null) {
+		if (configFile == null) {
+	    	System.out.println("The configuration file is not a defined resource.");
+		} else {
 		    try {
 				Properties configProps = new Properties();
 				configProps.load(configFile);
 				propertyValue = configProps.getProperty(propertyName).trim();
 			
 		    } catch (FileNotFoundException ex) {
-		    	System.out.println("File Not Found!");
+		    	System.out.println("Configuration file not found.");
 			propertyValue = "";
 		
 		    } catch (IOException ex) {
-		    	System.out.println("File Not Found!");
+		    	System.out.println("I/O error encountered trying to read the configuration file.");
 		    }
 		}
 		return propertyValue;
