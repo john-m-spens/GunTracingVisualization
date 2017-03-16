@@ -1,10 +1,13 @@
 package org.sandyhookproject.dataLoader;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.prefs.Preferences;
+import java.util.Properties;
 
 import org.sandyhookproject.entity.*;
 
@@ -15,31 +18,18 @@ public class DataLoader {
 	
 	public DataLoader() {
 
-		String connectionString = "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata";
-		String userName = "sandyhookdb";
-		String password = "gundbpwd";
+		String configurationFile = "/org/sandyhookproject/resources/config.properties";
 		
-		setPreferences();
-		/*
-		Preferences preferences = Preferences.userNodeForPackage(DataLoader.class);
-	    preferences.put("db_connection_string", connectionString);
-	    preferences.put("db_username", userName);
-	    preferences.put("db_password", password);
-		*/
 	    try {
+			String connectionString = getConfigurationSetting(configurationFile, "connection");
+			String userName = getConfigurationSetting(configurationFile, "userName");
+			String password = getConfigurationSetting(configurationFile, "password");
+		
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void setPreferences() {
-		
-		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
-	    prefs.put("db_connection_string", "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata");
-	    prefs.put("db_username", "sandyhookdb");
-	    prefs.put("db_password", "gundbpwd");
 	}
 	
 	public StatePopulations loadStatePopulations() {
@@ -139,6 +129,94 @@ public class DataLoader {
 		states.add(new State("WY", "Wyoming"));
 		return states;
 	}
+
+	private String getConfigurationSetting(String propertiesFileName, String propertyName) {
+		
+		String propertyValue = "";
+		InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+		
+		if (configFile != null) {
+		    try {
+				Properties configProps = new Properties();
+				configProps.load(configFile);
+				propertyValue = configProps.getProperty(propertyName).trim();
+			
+		    } catch (FileNotFoundException ex) {
+		    	System.out.println("File Not Found!");
+			propertyValue = "";
+		
+		    } catch (IOException ex) {
+		    	System.out.println("File Not Found!");
+		    }
+		}
+		return propertyValue;
+	}
+
+	/*
+	private void createTestFile() {
+		
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+
+		try {
+
+			String content = "This is the content to write into file\n";
+			File newFile = new File("CreateThisFile.txt");
+			System.out.println(newFile.getAbsoluteFile());
+			
+			fw = new FileWriter("WhereAmI.txt");
+			bw = new BufferedWriter(fw);
+			bw.write(content);
+		  	System.out.println("Done");
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bw != null)
+					bw.close();
+
+				if (fw != null)
+					fw.close();
+
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void getClassPaths() {
+	
+		ClassLoader cl = this.getClass().getClassLoader();
+		URLClassLoader urlClassLoader = (URLClassLoader)cl;
+		URL configUrl = urlClassLoader.findResource("/org/sandyhookproject/resources/config.properties");
+		
+		if (configUrl != null) {
+			System.out.println(configUrl.toString());
+		}
+		else {
+			System.out.println("Configuration File Not Found!");
+		}
+		
+		try {
+			urlClassLoader.close();
+		}
+		catch (IOException e) {
+			System.out.println("Failed to close urlClassLoader!");
+		}
+		
+	        URL[] urls = ((URLClassLoader)cl).getURLs();
+
+	        for(URL url: urls){
+	        	System.out.println(url.getFile());
+	        }
+		
+	}
+	*/
 }
 
 

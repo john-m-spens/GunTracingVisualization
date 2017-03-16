@@ -1,0 +1,3 @@
+connection=jdbc:mysql://<server-name>:<port-number>/<database-name>
+userName=<user-name>
+password=<password>

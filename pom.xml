@@ -28,7 +28,7 @@
         	<artifactId>heroku-maven-plugin</artifactId>
         	<version>1.1.3</version>
 			<configuration>
-  				<appName>tracing-illegal-guns</appName>
+  				<appName>ancient-forest-92219</appName>
 			</configuration>
 		</plugin>
     </plugins>
