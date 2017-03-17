@@ -3,6 +3,24 @@
 <link rel="stylesheet" href="css/tracemap.css">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 
+<script>
+
+function setDisplayYear(displayYear) {
+	
+	loadStatesData("rest/GunTracingService/getGunTraces/" + displayYear);
+
+}
+
+function resetDisplayYear(displayYear) {
+	
+	setDisplayYear(displayYear);
+	clearMapColors();	
+	
+}
+
+</script>
+
+
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -12,7 +30,7 @@
  	<span class=title>Tracing the Movement of Illegal Guns</span>
    <br>
    <br>
-	Select the year to display <select name="traceYear" onchange="setDisplayYear(this)">
+	Select the year to display <select name="traceYear" onchange="resetDisplayYear(this.value)">
   		<option value="2012" selected>2012</option>
   		<option value="2011">2011</option>
   		<option value="2010">2010</option>
@@ -20,10 +38,10 @@
   		<option value="2008">2008</option>
 	</select>
 	<script>
-	loadStatesData(2012);
 	var mapHeight = document.getElementById("map-display").clientHeight;
 	var mapWidth = document.getElementById("map-display").clientWidth;
 	displayMap(mapWidth,mapHeight);
+	setDisplayYear("2012");
 	</script>
 </div>
 <div class=map-text>
@@ -46,15 +64,5 @@
 </div>
 </div>
 </body>
-
-<script>
-
-function setDisplayYear(selectObj) {
-	
-	loadStatesData(selectObj.value);
-	clearMapColors();	
-}
-
-</script>
 </html>
 

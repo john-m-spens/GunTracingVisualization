@@ -11,20 +11,65 @@ var currentHeight;
 
 /*******
 
+displayMap - Loads map shapes and gun data from JSON files and displays the map
+
+width, height - size (in pixels) of the displayed map.  Width is the important parameter due to the columnar layout of the display page
+
+*/
+function displayMap(width, height) {
+
+var x = width *  (900/width);
+var y = height * (800/height);
+var sizeString = "0 0 " + x + " " + y;
+
+path = d3.geo.path();
+
+svg = d3.select("div")
+	.append("div")
+	.append("svg")
+	//responsive SVG needs these 2 attributes and no width and height attr
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.attr("viewBox", sizeString)
+	.classed("svg-container", true) //container class to make it responsive
+	.classed("svg-content-responsive", true); 
+
+g = svg.append("g")
+    .attr("id", "states");
+
+d3.json("json/statesMap.json", function(json) {
+    g.selectAll("path")
+        .data(json.features)
+        .enter().append("path")
+        .attr("d", path)
+        .on("mouseover", findStatesReceivingGuns);
+	});
+    
+currentWidth = width;
+currentHeight = height;
+}
+
+
+/*******
+
 loadStatesData - Calls web service to populate the states date
 
 */
-function loadStatesData(year) {
-	
-	var webServiceUrl= "rest/GunTracingService/getGunTraces/" + String(year);
+function loadStatesData(webServiceUrl) {
 
+	gunTraceData = null;
 	d3.json(webServiceUrl, function(data) {
 		gunTraceData = data;
 	});
 }
 
+/*******
+
+clearMapColors - Resets the current map.  To be used when the underlying data set changes.
+
+*/
 function clearMapColors() {
 
+	
 	if (g != null) {
         g.selectAll("path")
 	        .classed("ExtraLow", function(cell) { return false; })
@@ -39,53 +84,21 @@ function clearMapColors() {
     document.getElementById("displayStateTable").setAttribute("style","visibility: hidden;");
     document.getElementById("stateName").innerHTML = "";
     document.getElementById("originState").innerHTML = "";
-    document.getElementById("stateOfOrigin").innerHTML = "";
     document.getElementById("numGunsTraced").innerHTML = "";
     document.getElementById("pctAllTracedGuns").innerHTML = "";
     document.getElementById("gunsPerCapita").innerHTML = "";
 }
 
 
-
-/*******
-
-    displayMap - Loads map shapes and gun data from JSON files and displays the map
-
-    width, height - size (in pixels) of the displayed map.  Width is the important parameter due to the columnar layout of the display page
-
-*/
-function displayMap(width, height) {
-
-	var x = width *  (900/width);
-    var y = height * (800/height);
-    var sizeString = "0 0 " + x + " " + y;
+function enableMouseOverStates(enabled) {
 	
-    path = d3.geo.path();
-    
-    svg = d3.select("div")
-    	.append("div")
-    	.append("svg")
-    	//responsive SVG needs these 2 attributes and no width and height attr
-    	.attr("preserveAspectRatio", "xMidYMid meet")
-    	.attr("viewBox", sizeString)
-    	.classed("svg-container", true) //container class to make it responsive
-    	.classed("svg-content-responsive", true); 
-   
-    g = svg.append("g")
-        .attr("id", "states");
-  
-    d3.json("json/statesMap.json", function(json) {
-        g.selectAll("path")
-            .data(json.features)
-            .enter().append("path")
-            .attr("d", path)
-            .on("mouseover", findStatesReceivingGuns);
-        
-//        resizeMap(width, height);  // Enables resizing based on screen size/resolution
-    	currentWidth = width;
-    	currentHeight = height;
-    });
+	if (enabled) {
+	    g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("mouseover", findStatesReceivingGuns);
+	} else {
+	    g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("mouseover", null);
+	}
 }
+
 
 /*******
 
@@ -98,7 +111,7 @@ function displayMap(width, height) {
  */
 function findStatesReceivingGuns(d) {
 
-    if (d != null) {
+	if ((d != null)) {
         g.selectAll("path")
             .classed("ExtraLow", function(cell) { return findMatchingStates(cell,d,1,25); })
             .classed("Low", function(cell) { return findMatchingStates(cell,d,25,50); })
@@ -110,8 +123,6 @@ function findStatesReceivingGuns(d) {
         createAccompanyingText(d);
     }
 }
-
-
 
 /*******
 
@@ -131,44 +142,7 @@ function findMatchingStates(tgt, src, bm, tp) {
     rw = Number(tgt.id)-1;
     nGuns = gunTraceData.states[cl].data[rw];
    return (nGuns >= bm) && (nGuns <=tp);
-
 }
-
-/*******
-
- resizeMap()
-
- Calculates the map size based on scale (which is determined from the current screen resolution).
-
- width - width set by developer
- height - height set by developer
-
- */
-function resizeMap(width, height) {
-
-	var scale = calculateScaling(width, height);
-	x = width / 2;
-    y = height / 2;
-    var translateString = "translate(" + x + "," + y + ")scale(" + scale +")translate(" + -x + "," + -y + ")";
-    g.selectAll("path").attr("transform", translateString);
-}
-
-
-function calculateScaling(width, height) {
-	
-	var vScale = height/800;
-	var hScale = width/1000;
-	
-	if (vScale < hScale) {
-		return vScale;
-	}
-	else {
-		return hScale;
-	}
-	
-}
-
-
 
 /*******
 
@@ -205,7 +179,6 @@ function createAccompanyingText(d) {
         document.getElementById("displayStateTable").setAttribute("style","visibility: visible;");
         document.getElementById("stateName").innerHTML = stateName;
         document.getElementById("originState").innerHTML = stateName;
-//        document.getElementById("stateOfOrigin").innerHTML = stateName;
         document.getElementById("numGunsTraced").innerHTML = nmbFormatter(nGuns);
         document.getElementById("pctAllTracedGuns").innerHTML = pctFormatter(nGuns, nTotGuns);
         document.getElementById("gunsPerCapita").innerHTML = nmbFormatter(nGuns/gunTraceData.states[iState].population * 100000,2);
@@ -215,7 +188,7 @@ function createAccompanyingText(d) {
 
 /*******
 
- createGunTraceList() Populates the  10 recipients of guns table for the selected state.
+ displayGunTraceList() Populates the  10 recipients of guns table for the selected state.
 
  nState: numeric ID of the selected state.  TODO Make this similar to the other routines where  we retrieve the state object
 
@@ -273,6 +246,11 @@ function reshuffleGunTraceList(startingPoint) {
     }
 }
 
+/*******
+
+clearGunTraceList() Clears the list of gun traces when underlying data is reset.
+
+*/
 function clearGunTraceList() {
 
     for (var i=0;i<50;i++) {
@@ -295,7 +273,7 @@ function getTotalTracesForState(stateNum) {
     return totTraces;
 }
 
-/*
+/*******
 
 Cheap & easy number Formatter.  Doesn't handle anything beyond a single comma.
 
@@ -340,7 +318,7 @@ function nmbFormatter(num, decPlace) {
     return (integers + dec + decimals);
 }
 
-/*
+/********
 
  Cheap & easy percent Formatter.  Doesn't handle anything beyond a single comma.
 
