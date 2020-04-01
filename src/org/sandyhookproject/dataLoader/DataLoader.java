@@ -21,9 +21,9 @@ public class DataLoader {
 		String configurationFile = "config.properties";
 		
 	    try {
-			String connectionString = getConfigurationSetting(configurationFile, "connection");
-			String userName = getConfigurationSetting(configurationFile, "userName");
-			String password = getConfigurationSetting(configurationFile, "password");
+			String connectionString = "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata"; // getConfigurationSetting(configurationFile, "connection");
+			String userName = "sandyhookdb"; // getConfigurationSetting(configurationFile, "userName");
+			String password = "gundbpwd"; // getConfigurationSetting(configurationFile, "password");
 		
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
