@@ -18,18 +18,18 @@ public class DataLoader {
 	
 	public DataLoader() {
 
-		String configurationFile = "/Users/jspens/Documents/config.properties";
+		String configurationFile = "/main/resources/config.properties";
 		
 	    try {
-			String connectionString =  "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata"; // getConfigurationSetting(configurationFile, "connection"); 
-			String userName = "sandyhookdb";  // getConfigurationSetting(configurationFile, "userName");  
-			String password = "gundbpwd"; // getConfigurationSetting(configurationFile, "password"); 
-		
+	    	
+			String connectionString =  getConfigurationSetting(configurationFile, "connection"); 
+			String userName = getConfigurationSetting(configurationFile, "userName");  
+			String password = getConfigurationSetting(configurationFile, "password"); 
+			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
 		} catch (Exception e) {
 			System.out.println("Failed to connect to Server");
-			// e.printStackTrace();
 		}
 	}
 	
@@ -45,7 +45,6 @@ public class DataLoader {
 			}
 			rs.close();
 		} catch (Exception e) {
-			// e.printStackTrace();
 			System.out.println("Failed to query the state_populations table.");
 			statePops = null;
 		}
@@ -71,7 +70,6 @@ public class DataLoader {
 			}
 			rs.close();
 		} catch (Exception e) {
-			// e.printStackTrace();
 			System.out.println("Failed on Loading Traces.");
 			traces = null;
 		}
@@ -140,16 +138,20 @@ public class DataLoader {
 		
 		String propertyValue = "";
 	
-			InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-			Properties configProps = new Properties();
-			
+		InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+		
+		if (configFile == null) {
+			System.out.println("Unable to open properties file: " + propertiesFileName);
+		} else {
 			try {
-				configProps.load(configFile);
-				propertyValue = configProps.getProperty(propertyName).trim();
-			}
-			catch (IOException ex) {
-				ex.printStackTrace();
-			}
+					Properties configProps = new Properties();
+					configProps.load(configFile);
+					propertyValue = configProps.getProperty(propertyName).trim();
+				}
+				catch (IOException ex) {
+					ex.printStackTrace();
+				}
+		}
 		return propertyValue;
 	}
 }
