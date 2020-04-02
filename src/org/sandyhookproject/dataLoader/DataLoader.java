@@ -18,12 +18,12 @@ public class DataLoader {
 	
 	public DataLoader() {
 
-		String configurationFile = "config.properties";
+		String configurationFile = "/Users/jspens/Documents/config.properties";
 		
 	    try {
-			String connectionString = "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata"; // getConfigurationSetting(configurationFile, "connection");
-			String userName = "sandyhookdb"; // getConfigurationSetting(configurationFile, "userName");
-			String password = "gundbpwd"; // getConfigurationSetting(configurationFile, "password");
+			String connectionString =  "jdbc:mysql://guntracingdb.cwbazegcamjt.us-west-2.rds.amazonaws.com:3306/gundata"; // getConfigurationSetting(configurationFile, "connection"); 
+			String userName = "sandyhookdb";  // getConfigurationSetting(configurationFile, "userName");  
+			String password = "gundbpwd"; // getConfigurationSetting(configurationFile, "password"); 
 		
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
@@ -139,92 +139,19 @@ public class DataLoader {
 	private String getConfigurationSetting(String propertiesFileName, String propertyName) {
 		
 		String propertyValue = "";
-		InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-		
-		if (configFile == null) {
-	    	System.out.println("The configuration file is not a defined resource.");
-		} else {
-		    try {
-				Properties configProps = new Properties();
+	
+			InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+			Properties configProps = new Properties();
+			
+			try {
 				configProps.load(configFile);
 				propertyValue = configProps.getProperty(propertyName).trim();
-			
-		    } catch (FileNotFoundException ex) {
-		    	System.out.println("Configuration file not found.");
-			propertyValue = "";
-		
-		    } catch (IOException ex) {
-		    	System.out.println("I/O error encountered trying to read the configuration file.");
-		    }
-		}
-		return propertyValue;
-	}
-
-	/*
-	private void createTestFile() {
-		
-		BufferedWriter bw = null;
-		FileWriter fw = null;
-
-		try {
-
-			String content = "This is the content to write into file\n";
-			File newFile = new File("CreateThisFile.txt");
-			System.out.println(newFile.getAbsoluteFile());
-			
-			fw = new FileWriter("WhereAmI.txt");
-			bw = new BufferedWriter(fw);
-			bw.write(content);
-		  	System.out.println("Done");
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			try {
-
-				if (bw != null)
-					bw.close();
-
-				if (fw != null)
-					fw.close();
-
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				ex.printStackTrace();
 			}
-		}
+		return propertyValue;
 	}
-
-	private void getClassPaths() {
-	
-		ClassLoader cl = this.getClass().getClassLoader();
-		URLClassLoader urlClassLoader = (URLClassLoader)cl;
-		URL configUrl = urlClassLoader.findResource("/org/sandyhookproject/resources/config.properties");
-		
-		if (configUrl != null) {
-			System.out.println(configUrl.toString());
-		}
-		else {
-			System.out.println("Configuration File Not Found!");
-		}
-		
-		try {
-			urlClassLoader.close();
-		}
-		catch (IOException e) {
-			System.out.println("Failed to close urlClassLoader!");
-		}
-		
-	        URL[] urls = ((URLClassLoader)cl).getURLs();
-
-	        for(URL url: urls){
-	        	System.out.println(url.getFile());
-	        }
-		
-	}
-	*/
 }
 
 
