@@ -17,18 +17,20 @@ public class DataLoader {
 	
 	public DataLoader() {
 
-		String configurationFile = "/main/resources/config.properties";
+		String connectionString =  System.getenv("connection"); 
+		String userName = System.getenv("userName");  
+		String password = System.getenv("password"); 
 		
 	    try {
-	    	
-			String connectionString =  getConfigurationSetting(configurationFile, "connection"); 
-			String userName = getConfigurationSetting(configurationFile, "userName");  
-			String password = getConfigurationSetting(configurationFile, "password"); 
-			
+	    
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
-		} catch (Exception e) {
+
+	    } catch (Exception e) {
 			System.out.println("Failed to connect to Server");
+			System.out.println("Connection = " + connectionString);
+			System.out.println("userName = " + userName);
+			System.out.println("password = " + password);
 		}
 	}
 	
