@@ -1,17 +1,13 @@
 package org.sandyhookproject.dataLoader;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Properties;
 
 import org.sandyhookproject.entity.*;
 
 public class DataLoader {
-
 
 	private Connection con;
 	
@@ -22,7 +18,6 @@ public class DataLoader {
 		String password = System.getenv("password"); 
 		
 	    try {
-	    
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(connectionString, userName, password);
 
@@ -133,27 +128,6 @@ public class DataLoader {
 		states.add(new State("WI", "Wisconsin"));
 		states.add(new State("WY", "Wyoming"));
 		return states;
-	}
-
-	private String getConfigurationSetting(String propertiesFileName, String propertyName) {
-		
-		String propertyValue = "";
-	
-		InputStream configFile = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-		
-		if (configFile == null) {
-			System.out.println("Unable to open properties file: " + propertiesFileName);
-		} else {
-			try {
-					Properties configProps = new Properties();
-					configProps.load(configFile);
-					propertyValue = configProps.getProperty(propertyName).trim();
-				}
-				catch (IOException ex) {
-					ex.printStackTrace();
-				}
-		}
-		return propertyValue;
 	}
 }
 

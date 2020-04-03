@@ -41,7 +41,7 @@ d3.json("json/statesMap.json", function(json) {
         .data(json.features)
         .enter().append("path")
         .attr("d", path)
-        .on("mouseover", findStatesReceivingGuns);
+        .on("click", findStatesReceivingGuns);
 	});
     
 currentWidth = width;
@@ -93,9 +93,9 @@ function clearMapColors() {
 function enableMouseOverStates(enabled) {
 	
 	if (enabled) {
-	    g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("mouseover", findStatesReceivingGuns);
+	    g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("click", findStatesReceivingGuns);
 	} else {
-	    g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("mouseover", null);
+	    // g.selectAll("path").data(json.features).enter().append("path").attr("d", path).on("mouseover", null);
 	}
 }
 
